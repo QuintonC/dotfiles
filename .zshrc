@@ -29,9 +29,8 @@ source $ZSH/oh-my-zsh.sh
 # Git Aliases
 # ----------------------
 alias gaa='git add .'
-alias gca='git commit -a'
 alias gcm='git commit -m'
-alias gmo='gitmoji -c'
+alias gmoji='gitmoji -c'
 alias gi='git init'
 alias gp='git pull'
 alias gs='git status'
