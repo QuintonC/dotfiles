@@ -26,7 +26,7 @@ if [ ! -z "${SPIN}" ]; then
   # spin packages that need to be installed
   declare -a SPIN_PACKAGES=(
     # required for git-prompt
-    python
+    python-is-python3
   )
 
   if [ ${#SPIN_PACKAGES[@]} -gt 0 ]; then
