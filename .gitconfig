@@ -1,7 +1,0 @@
-# This is Git's per-user configuration file.
-[init]
-	defaultBranch = main
-
-[user]
-	email = quintonchester@gmail.com
-	name = Quinton Chester

@@ -1,52 +1,22 @@
-# Fig pre block. Keep at the top of this file.
-. "$HOME/.fig/shell/zshrc.pre.zsh"
-
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="robbyrussell"
+export ZSH="${HOME}/.oh-my-zsh"
 
-# Update frequency
-# just remind me to update when it's time
-zstyle ':omz:update' mode reminder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
-
-source $ZSH/oh-my-zsh.sh
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-
-# ----------------------
-# Git Aliases
-# ----------------------
-alias gaa='git add .'
-alias gcm='git commit -m'
-alias gmoji='gitmoji -c'
-alias gi='git init'
-alias gp='git pull'
-alias gs='git status'
-alias gpu='git push'
-
-# ----------------------
-# React Native Aliases
-# ----------------------
-alias rnios='react-native run-ios'
-alias podrun='cd ios && pod install && cd .. && react-native run-ios'
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-export PATH=$PATH:/opt/homebrew/bin
-
-# Fig post block. Keep at the bottom of this file.
-. "$HOME/.fig/shell/zshrc.post.zsh"
+# don't edit this file, add customizations to ~/.zshrc.d/
+if [ -d ~/.zshrc.d ]; then
+  null_glob_prev_val=$options[null_glob]
+  setopt null_glob
+  for f in ~/.zshrc.d/*; do
+    source "$f"
+  done
+  if [[ "$null_glob_prev_val" = "off" ]]; then
+    unsetopt null_glob
+  fi
+  unset null_glob_prev_val
+elif [ -f "${ZSH}/templates/zshrc.zsh-template" ]; then
+  # no .zshrc.d so fallback onto the template
+  source "${ZSH}/templates/zshrc.zsh-template"
+else
+  # somehow no template either??? fallback on a super basic config
+  ZSH_THEME="robbyrussell"
+  source "${ZSH}/oh-my-zsh.sh"
+fi
