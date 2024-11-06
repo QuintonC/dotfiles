@@ -20,7 +20,6 @@
 # rbenv
 eval "$(rbenv init -)"
 
-
 # initialize git config
 touch "${HOME}/.gitconfig"
 if [ -f "${HOME}/.gitconfig.local" ]; then
