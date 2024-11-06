@@ -1,6 +1,8 @@
 # start with the base theme
 source $ZSH/themes/robbyrussell.zsh-theme
 
+zstyle ':omz:update' mode reminder
+
 # better git prompt
 # requires git-prompt plugin
 # first override the default theme vars

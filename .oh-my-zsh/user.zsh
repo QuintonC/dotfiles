@@ -14,8 +14,12 @@
 [ -z "${HOME}/.nvm" ] && mkdir -p "${HOME}/.nvm"
 [ -z "${NVM_DIR}" ] && export NVM_DIR="${HOME}/.nvm"
 [ -z "${NVM_HOME}" ] && export NVM_HOME="${HOMEBREW_PREFIX}/opt/nvm"
-[ -s "${NVM_HOME}/nvm.sh" ] && source "${NVM_HOME}/nvm.sh"
-[ -s "${NVM_HOME}/etc/bash_completion.d/nvm" ] && source "${NVM_HOME}/etc/bash_completion.d/nvm"
+[ -s "${NVM_HOME}/nvm.sh" ] && source "${NVM_HOME}/nvm.sh" # loads nvm
+[ -s "${NVM_HOME}/etc/bash_completion.d/nvm" ] && source "${NVM_HOME}/etc/bash_completion.d/nvm" # loads nvm bash completion
+
+# rbenv
+eval "$(rbenv init -)"
+
 
 # initialize git config
 touch "${HOME}/.gitconfig"

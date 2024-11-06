@@ -8,5 +8,5 @@ plugins=(
   command-not-found
   git
   git-prompt
-  z
+  rails
 )
