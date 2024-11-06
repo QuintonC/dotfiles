@@ -1,5 +1,17 @@
 #!/bin/bash
 
+if [ ! -z "${SPIN}" ]; then
+  # spin packages that need to be installed
+  declare -a SPIN_PACKAGES=(
+    # required for git-prompt
+    python-is-python3
+  )
+
+  if [ ${#SPIN_PACKAGES[@]} -gt 0 ]; then
+    sudo apt install -y --no-install-recommends ${SPIN_PACKAGES[@]}
+  fi
+fi
+
 # auto-install oh-my-zsh
 if [ ! -f "${HOME}/.oh-my-zsh/oh-my-zsh.sh" ]; then
   sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -20,16 +32,4 @@ if [ -f /etc/zsh/zshrc.default.inc.zsh ]; then
 else
   # if this replaces an existing config, check $HOME/.zshrc.pre-oh-my-zsh
   rsync -avh .zshrc "${HOME}/.zshrc"
-fi
-
-if [ ! -z "${SPIN}" ]; then
-  # spin packages that need to be installed
-  declare -a SPIN_PACKAGES=(
-    # required for git-prompt
-    python-is-python3
-  )
-
-  if [ ${#SPIN_PACKAGES[@]} -gt 0 ]; then
-    sudo apt install -y --no-install-recommends ${SPIN_PACKAGES[@]}
-  fi
 fi
