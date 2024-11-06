@@ -14,13 +14,11 @@ ZSH_THEME_GIT_PROMPT_SEPARATOR=" "
 
 PROMPT_Q_PREFIX='➜'
 if [ ! -z "${SPIN}" ]; then
-  PROMPT_Q_PREFIX="꩜ ${PROMPT_Q_PREFIX}"
+  PROMPT_Q_PREFIX="꩜"
 fi
 
 # original prompt from robbyrussell
-# PROMPT="%(?:%{$fg_bold[green]%}%1{➜%} :%{$fg_bold[red]%}%1{➜%} ) %{$fg[cyan]%}%c%{$reset_color%}"
-PROMPT="%(?:%{$fg_bold[green]%}${PROMPT_Q_PREFIX}:%{$fg_bold[red]%}${PROMPT_Q_PREFIX})"
-PROMPT+=' %{$fg[cyan]%}%~%{$reset_color%}'
+PROMPT="%(?:%{$fg_bold[green]%}%1{${PROMPT_Q_PREFIX}%} :%{$fg_bold[red]%}%1{${PROMPT_Q_PREFIX}%} ) %{$fg[cyan]%}%c%{$reset_color%}"
 
 if [ -z "${__GIT_PROMPT_DIR}" ]; then
   PROMPT+=' '
