@@ -1,0 +1,18 @@
+font-family = "CommitMono Nerd Font"
+theme = light:tokyonight-day,dark:tokyonight_night
+selection-invert-fg-bg = true
+link-url = true
+window-padding-x = 8
+window-padding-color = extend
+
+# macOS specific features
+macos-titlebar-style = tabs
+window-vsync = true
+window-colorspace = display-p3
+
+# Temporary until this lands in a future version
+# Reference: https://github.com/ghostty-org/ghostty/pull/3679
+keybind = cmd+backspace=text:\x15
+keybind = cmd+delete=text:\x0b
+keybind = cmd+left=text:\x01
+keybind = cmd+right=text:\x05

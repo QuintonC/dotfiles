@@ -1,26 +1,27 @@
 #!/bin/bash
 
-if [ ! -z "${SPIN}" ]; then
-  # spin packages that need to be installed
-  declare -a SPIN_PACKAGES=(
-    # required for git-prompt
-    python-is-python3
-  )
-
-  if [ ${#SPIN_PACKAGES[@]} -gt 0 ]; then
-    sudo apt install -y --no-install-recommends ${SPIN_PACKAGES[@]}
-  fi
-fi
-
 # auto-install oh-my-zsh
 if [ ! -f "${HOME}/.oh-my-zsh/oh-my-zsh.sh" ]; then
   sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
+# auto-install bun
+if [ ! -d "${HOME}/.bun" ]; then
+  sh -c "$(curl -fsSL https://bun.sh/install | bash)"
+fi
+
+# auto-install nvm
+if [ ! -d "${HOME}/.nvm" ]; then
+  # We install using the script, but explicitly tell nvm to not edit the shell config
+  sh -c "$(PROFILE=/dev/null curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash)"
+fi
+
 # .dotfiles to bootstrap
 declare -a BOOTSTRAP_FILES=(
+  .config
   .oh-my-zsh
   .gitconfig.local
+  .tmux.conf
   .zshrc.d
 )
 

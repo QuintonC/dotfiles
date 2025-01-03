@@ -3,6 +3,7 @@
 # homebrew integration
 [ -f "/opt/homebrew/bin/brew" ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 [ -f "/usr/local/bin/brew" ] && eval "$(/usr/local/bin/brew shellenv)"
+export PATH=$PATH:/opt/homebrew/bin
 
 # local bin
 [ -d "${HOME}/bin" ] && export PATH=${HOME}/bin:$PATH
@@ -10,15 +11,23 @@
 # common shell configuration
 [ -f "${HOME}/.commonrc" ] && source "${HOME}/.commonrc"
 
+# bun configuration
+[ ! -d "$HOME/.bun" ] && mkdir -p "$HOME/.bun"
+[ -s "$HOME/.bun/_bun" ] && \. "$HOME/.bun/_bun"
+[ -z "$BUN_INSTALL" ] && export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
 # nvm
-[ -z "${HOME}/.nvm" ] && mkdir -p "${HOME}/.nvm"
-[ -z "${NVM_DIR}" ] && export NVM_DIR="${HOME}/.nvm"
-[ -z "${NVM_HOME}" ] && export NVM_HOME="${HOMEBREW_PREFIX}/opt/nvm"
-[ -s "${NVM_HOME}/nvm.sh" ] && source "${NVM_HOME}/nvm.sh" # loads nvm
-[ -s "${NVM_HOME}/etc/bash_completion.d/nvm" ] && source "${NVM_HOME}/etc/bash_completion.d/nvm" # loads nvm bash completion
+[ ! -d "$HOME/.nvm" ] && mkdir -p "$HOME/.nvm"
+[ -z "$NVM_DIR" ] && export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 # rbenv
-eval "$(rbenv init -)"
+# eval "$(rbenv init -)"
+
+# starship
+eval "$(starship init zsh)"
 
 # initialize git config
 touch "${HOME}/.gitconfig"
