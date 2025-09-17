@@ -1,5 +1,5 @@
 font-family = "CommitMono Nerd Font"
-theme = light:tokyonight-day,dark:tokyonight_night
+theme = light:TokyoNight Day,dark:TokyoNight Night
 selection-invert-fg-bg = true
 link-url = true
 window-padding-x = 8
@@ -16,3 +16,7 @@ keybind = cmd+backspace=text:\x15
 keybind = cmd+delete=text:\x0b
 keybind = cmd+left=text:\x01
 keybind = cmd+right=text:\x05
+
+# Working directory configurations
+window-inherit-working-directory = false
+working-directory = home
