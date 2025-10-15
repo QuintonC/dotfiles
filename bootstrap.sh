@@ -18,6 +18,7 @@ fi
 
 # .dotfiles to bootstrap
 declare -a BOOTSTRAP_FILES=(
+  .claude
   .config
   .oh-my-zsh
   .gitconfig.local
