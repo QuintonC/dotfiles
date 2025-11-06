@@ -1,11 +1,34 @@
 ---
+allowed-tools: Bash(date*), Bash(gh search prs --author=@me *), Bash(gh pr view --author=me *), Bash(gh issue view *), mcp__slack-mcp__slack_my_messages, Read(/Users/quintonchester/Activity/**)
 name: geekbot
 description: Generate a geekbot message for my standup
 ---
 
+## Context
+
+Run these bash commands to determine the current day and previous workday:
+
+- Day of week: !`date +%u`
+- Today: !`date "+%Y-%m-%d"`
+- Yesterday: !`date -v-1d "+%Y-%m-%d"`
+- Three days ago: !`date -v-3d "+%Y-%m-%d"`
+- Day name today: !`date +%A`
+- Day name yesterday: !`date -v-1d +%A`
+
+Based on the day of week number from the first command:
+- If day = 1 (Monday): Use "Three days ago" as previous workday, previous day number is 5, reference as "Friday"
+- If day = 2-5 (Tue-Fri): Use "Yesterday" as previous workday, previous day number is (day - 1), reference as "yesterday"
+
 ## Instructions
 
-Prepare a raw markdown message that I can use for my Geekbot standup for the `{team_standup_name}`. Look at my previous message from yesterday's Geekbot submission using the `geekbot-mcp` or my previous interactions with the Geekbot application in Slack.
+Based on the context above:
+- The day of week number tells us what day today is (1=Mon through 5=Fri)
+- Today's date is shown in YYYY-MM-DD format
+- Previous workday is the date we need to look back to
+- Previous day number is the file we need to check (1.md through 5.md)
+- Previous day name is how we reference it ("yesterday" or "Friday")
+
+Prepare a raw markdown message that I can use for my Geekbot standup for the `{team_standup_name}`. Look at my previous message from {previous_day_name}'s Geekbot submission using the files we created from the previous standup entry stored in `/Users/quintonchester/Activity/yyyy-ww/{previous_day_number}.md`. If no files exist in the Activity directory, fall back to using the `slack-mcp` to find previous interactions with the Geekbot application in Slack.
 
 If I didn't respond to the previous day, please reference the last time I responded to the Geekbot survey.
 
@@ -23,29 +46,43 @@ Feel free to prompt me to ask for more information about items you are unclear o
 
 > You mentioned you were going to investigate an action item from {incident_channel} with @{colleague}. Were you able to resolve the issue?
 
+### Accuracy requirements
+
+- Focus on actual work completed, not speculation
+- Only include activities that actually happened based on Slack evidence
+- Do not invent or assume activities (like "ATC rotation" or "reviewing PRs")
+- If unsure about something, omit it rather than guess
+- Match activities to what I said I would do in my previous standup
+- List meetings first in each section for clarity
+
 ## Link handling
 
-- If there are GitHub links, try to pull the info from the pull request or issue using the `gh` CLI command. Give a one-line summary in the update for the provided GitHub link.
-- If the links are for Graphite, you can also use GitHub to get the context of the pull request.
-  - For example, https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number} would be a pull request in the `{organization}` organization, `{repository}` repository, and pull request number `{pull_request_number}`.
-- If the text includes formatted markdown, such as [text](link), keep it as-is. Otherwise, try to integrate links in that format.
+- **IMPORTANT**: All links in the standup must use markdown link format: `[descriptive text](URL)`
+- For GitHub links, use the PR/issue title as the link text: `[PR title text](github.com/...)`
+- If there are GitHub links, try to pull the info from the pull request or issue using the `gh` CLI command. Use the PR/issue title as the link text.
+  - For Graphite links, extract the `repository` and `organization` from the link and use gh CLI as instructed above.
+    - For example, https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number} would be a pull request in the `{organization}` organization, `{repository}` repository, and pull request number `{pull_request_number}`.
+- For example: "Shipped fix to [prevent duplicate email checks](https://github.com/{organization}/{repository}/pull/{pull_request_number})"
 
 ## Slack activity
 
-Try to search slack for my interactions for yesterday (or Friday if it's Monday). Summarize them to at most 3 bullet points per channel. For example, if I had a lot of activity in one channel, format the response using the channel name as the first-level of the list and sub-items as the second level. For example,
+- Try to search slack for my interactions for {previous_workday}.
+- **IMPORANT**: Ensure the messages you are querying are `after:{previous_workday} before:{today}`.
+- **IMPORANT**: When searching Slack, explicitly specify date ranges with the current year.
+  - Edge case warning: For the first report of the new year, please do refer to the most recent activity since my last update in Slack.
+- Summarize updates to at most 3 bullet points per channel.
+  - For example, if I had a lot of activity in one channel, format the response using the channel name as the first-level of the list and sub-items as the second level. For example,
 
-```md
-- #proj-{project_channel}
-  - Activity summary 1
-  - Activity summary 2
-  - Activity summary 3
-```
+    ```md
+    - #proj-{project_channel}
+      - Activity summary 1
+      - Activity summary 2
+      - Activity summary 3
+    ```
 
 ## Tidiness
 
-Ensure that you are using the proper tools. You should have access to the `slack-mcp`, `geekbot-mcp`, and `gh` CLI tool.
-
-Only use the `geekbot-mcp` when needed as it is very slow and often times out.
+Ensure that you are using the proper tools. You should have access to the `slack-mcp`, and `gh` CLI tool.
 
 If there is nothing blocking my progress, provide a `-` as a response to the question.
 
@@ -61,7 +98,9 @@ Geekbot should ask three questions, but is subject to change.
 2. What will you do today?
 3. Anything blocking your progress?
 
-Give me the final response through a formatted message with those headers, for example:
+**Always provide the final standup in a markdown code block** using the three headers above.
+
+### Expected outcome example
 
 ```md
 ## What have you done since yesterday?
@@ -90,15 +129,26 @@ Give me the final response through a formatted message with those headers, for e
 -
 ```
 
+## Final Output Format
+
+**CRITICAL**: Always provide the final standup message in a raw markdown code block using triple backticks (```md). This ensures the user can copy and paste the content directly into Geekbot without formatting issues.
+
 ## Side effects
 
 I want to use these reports to put together context for my impact reviews as well. To do this, you will need to create a new folder for the first report I make for each week. My first report for each week could take place on any day given holidays and vacation time.
 
-1. For the first report of each week, ensure that a new folder exists in `/Users/quintonchester/Activity` that correlates to the year and week number, `yyyy-weekNumber`. Week numbers should be non-zero based with the first week starting with week number 1.
-2. Put together a markdown file, `dayNumber.md` with the **final** standup response that we've put together.
+1. For the first report of each week, ensure that a new folder exists in `/Users/quintonchester/Activity/yyyy-ww` that correlates to the year and week number, `yyyy-ww`.
+   1. Week numbers should be non-zero based with the first week starting with week number 1.
+2. Put together a markdown file, `{day_of_week}.md` with the **final** standup response that we've put together.
    - **IMPORTANT**: Sometimes we will need to iterate on the standup content. Please only capture the final output. I will indicate when the information you've provided me with is complete and should be logged into the weekly directory.
 3. If you notice that a file is missing for the previous day, let me know so we can make sure that it gets created from the prior history (I will pull forward context from the previous command run).
 4. At the start of the following week, put together a `summary.md` file for the prior week.
    - This file should only include:
      - Highlights from the prior week from my own contributions.
      - Summarized information for projects I've either contributed to or championed. Please use the Vault MCP (`vault-mcp`) for this information.
+
+## Iterations and Corrections
+
+- If the user requests changes, maintain the same raw markdown code block format for all iterations
+- Each revised version should be provided in a new markdown code block
+- Keep track of changes requested to avoid repeating the same issues
