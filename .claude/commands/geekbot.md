@@ -1,7 +1,19 @@
 ---
-allowed-tools: Bash(date*), Bash(gh search prs --author=@me *), Bash(gh pr view --author=me *), Bash(gh issue view *), mcp__slack-mcp__slack_my_messages, Read(/Users/quintonchester/Activity/**)
-name: geekbot
+allowed-tools:
+  - Bash(date*)
+  - Bash(gh search prs --author=@me *)
+  - Bash(gh pr view *)
+  - Bash(gh pr list *)
+  - Bash(gh issue view *)
+  - Bash(mkdir *)
+  - Glob
+  - mcp__slack-mcp__get_messages
+  - mcp__gworkspace-mcp__calendar_events
+  - Read(/Users/quintonchester/Activity/**)
+  - Write(/Users/quintonchester/Activity/**)
 description: Generate a geekbot message for my standup
+model: claude-opus-4-5
+name: geekbot
 ---
 
 ## Context
@@ -16,8 +28,8 @@ Run these bash commands to determine the current day and previous workday:
 - Day name yesterday: !`date -v-1d +%A`
 
 Based on the day of week number from the first command:
-- If day = 1 (Monday): Use "Three days ago" as previous workday, previous day number is 5, reference as "Friday"
-- If day = 2-5 (Tue-Fri): Use "Yesterday" as previous workday, previous day number is (day - 1), reference as "yesterday"
+- If day = 1 (Monday): Use "Three days ago" as previous workday, previous day number is 5, reference as "Friday", and look in the **previous week's folder** (week - 1)
+- If day = 2-5 (Tue-Fri): Use "Yesterday" as previous workday, previous day number is (day - 1), reference as "yesterday", and look in the **current week's folder**
 
 ## Instructions
 
@@ -28,32 +40,41 @@ Based on the context above:
 - Previous day number is the file we need to check (1.md through 5.md)
 - Previous day name is how we reference it ("yesterday" or "Friday")
 
-Prepare a raw markdown message that I can use for my Geekbot standup for the `{team_standup_name}`. Look at my previous message from {previous_day_name}'s Geekbot submission using the files we created from the previous standup entry stored in `/Users/quintonchester/Activity/yyyy-ww/{previous_day_number}.md`. If no files exist in the Activity directory, fall back to using the `slack-mcp` to find previous interactions with the Geekbot application in Slack.
+### Overarching goal
 
-If I didn't respond to the previous day, please reference the last time I responded to the Geekbot survey.
+Prepare a raw markdown message that I can use for my Geekbot standup for the `{team_standup_name}` in Slack. Here are steps to accomplish this goal:
 
-If you see that an issue I linked in my previous "What will you do today" wasn't closed (through a linked pull request), check to see:
-
-- Is the linked PR waiting for reviewers?
-- Is this PR approved but hasn't yet been shipped either using the Graphite merge queue or `/shipit`?
-- Is there a linked PR?
-
-From there, ask me clarifying questions about the status of the work. It's possible I didn't get around to the work, so we should capture any disruptions to that flow.
-
-If I mentioned a pull request directly, run through the same checks.
-
-Feel free to prompt me to ask for more information about items you are unclear on, or need further information from me on. For example,
-
-> You mentioned you were going to investigate an action item from {incident_channel} with @{colleague}. Were you able to resolve the issue?
+- Look at my previous message from {previous_day_name}'s Geekbot submission using the files we created from the previous standup entry stored in `/Users/quintonchester/Activity/yyyy-ww/{previous_day_number}.md`.
+  - **IMPORTANT**: On Monday, the previous standup file is in the **previous week's folder** (e.g., if today is week 3, look in `2026-02/5.md` for Friday's standup).
+  - If no files exist in the Activity directory, fall back to using the `slack-mcp` to find previous interactions with the Geekbot application in Slack.
+  - If I didn't respond to the previous day, please reference the last time I responded to the Geekbot survey.
+- Use the `gworkspace-mcp` to get my calendar events for today and the previous workday.
+  - Avoid referencing common events such as:
+    - Lunch
+    - Focus time
+    - Any events marked as Personal
+    - Instead, focus on meetings that I have for projects and one-on-ones.
+  - For today's events, use parameters:
+    - `time_min: "today"`
+    - `time_max: "tomorrow"`
+    - `max_results: 20`
+  - For previous workday's events (to populate "What have you done"), query with the previous workday's date range.
+- If you see that an issue I linked in my previous "What will you do today" wasn't closed (through a linked pull request), check to see:
+  - Is the linked PR waiting for reviewers?
+  - Is this PR approved but hasn't yet been shipped either using the Graphite merge queue or `/shipit`?
+  - Is there a linked PR?
+- From there, ask me clarifying questions about the status of the work. It's possible I didn't get around to the work, so we should capture any disruptions to that flow.
+  - If I mentioned a pull request directly, run through the same checks.
+  - Feel free to prompt me to ask for more information about items you are unclear on, or need further information from me on. For example,
+    > You mentioned you were going to investigate an action item from {incident_channel} with @{colleague}. Were you able to resolve the issue?
 
 ### Accuracy requirements
 
 - Focus on actual work completed, not speculation
 - Only include activities that actually happened based on Slack evidence
-- Do not invent or assume activities (like "ATC rotation" or "reviewing PRs")
+- Do not invent or assume activities (like "ATC rotation" or "reviewing PRs"), reference only the events that were returned from the `gworkspace-mcp` server
 - If unsure about something, omit it rather than guess
 - Match activities to what I said I would do in my previous standup
-- List meetings first in each section for clarity
 
 ## Link handling
 
@@ -94,11 +115,17 @@ Instead, structure the response according to the prompts from Geekbot.
 
 Geekbot should ask three questions, but is subject to change.
 
-1. What have you done since yesterday?
+1. What have you done since yesterday? (On Monday, use "What have you done since Friday?")
 2. What will you do today?
 3. Anything blocking your progress?
 
 **Always provide the final standup in a markdown code block** using the three headers above.
+
+### Section guidance
+
+- **"What have you done since {previous_day_name}?"**: Include work completed on the previous workday (Friday if Monday, yesterday otherwise). This captures work from the last standup through end of that day.
+- **"What will you do today?"**: Include work already done today AND planned work for the rest of the day. This section captures today's goals, including items already accomplished. Things done earlier today should appear here, not in "What have you done."
+- On Monday, change the first header to "What have you done since Friday?"
 
 ### Expected outcome example
 

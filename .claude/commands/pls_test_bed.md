@@ -1,5 +1,5 @@
 ---
-name: pls_test
+name: pls_test_bed
 description: Generate Ruby tests for specific files or uncommitted changes
 arguments:
   - name: file_path
