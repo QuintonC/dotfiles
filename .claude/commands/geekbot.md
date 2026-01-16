@@ -76,6 +76,30 @@ Prepare a raw markdown message that I can use for my Geekbot standup for the `{t
 - If unsure about something, omit it rather than guess
 - Match activities to what I said I would do in my previous standup
 
+## Slack handles
+
+- When mentioning people by name, use their Slack handle
+- Use the Vault MCP (`vault_search_users` and `vault_get_user`) to look up the correct Slack handle for each person
+- Do not guess handles from Slack messages - always verify via Vault
+
+## User-provided context
+
+- When the user provides links during clarifying questions (e.g., documentation URLs, Slack threads), include those links in the final standup output
+- Use markdown link format: `[descriptive text](URL)`
+- This includes internal documentation links, Slack thread permalinks, and any other references shared
+
+## Formatting preferences
+
+- Avoid emdashes (—) in the output
+- If additional context is needed for a line item, use sub-items instead
+- Example:
+  - Instead of: `Bundle + Deploy Review with @{colleague} — decided to use staging as test candidate`
+  - Use:
+    ```md
+    - Bundle + Deploy Review with @{colleague}
+      - Decided to use staging as test candidate
+    ```
+
 ## Link handling
 
 - **IMPORTANT**: All links in the standup must use markdown link format: `[descriptive text](URL)`
