@@ -14,6 +14,11 @@ allowed-tools:
 description: Generate a geekbot message for my standup
 model: claude-opus-4-5
 name: geekbot
+hooks:
+  Stop:
+    - hooks:
+        - type: command
+          command: "open -g 'raycast://extensions/raycast/raycast/confetti'"
 ---
 
 ## Context
