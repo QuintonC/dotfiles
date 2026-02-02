@@ -1,135 +1,119 @@
-# Global Claude Code Instructions
+# Claude Code Instructions
 
-## General Workflow Preferences
+## Core Principles
 
-### Communication Style
+- **Simplicity First**: Make every change as simple as possible. Impact minimal code.
+- **No Laziness**: Find root causes. No temporary fixes. High-craft execution with staff engineer standards.
+- **Minimal Impact**: Changes should only touch what's necessary.
+- **Clarity Over Cleverness**: Write code for humans to read, not just machines to execute.
+- **Challenge the Status Quo**: If a pattern is redundant or unmaintainable, challenge it with detailed reasoning.
 
-- No yapping -- be concise and avoid unnecessary preambles or explanations unless asked
-- Use clear, actionable language when describing what you're doing
-- Only provide detailed explanations when complexity warrants it or when asked
-- Minimize output tokens while maintaining clarity and completeness
+## Communication
 
-### Task Management
+- Be concise. No yapping or unnecessary preambles unless asked.
+- Use clear, actionable language.
+- Reference specific file paths and lines when discussing code.
+- Summarize key findings and highlight important warnings.
 
-- Use TodoWrite for any complex task with 3+ steps or complex workflows
-- Mark tasks as in_progress BEFORE starting work
-- Complete tasks immediately after finishing - don't batch updates
+## Workflow Orchestration
 
-### Code Quality Standards
+### Plan Mode
 
-- Prefer editing existing files over creating new ones
-- Follow existing code conventions and patterns in each project
-- Use meaningful variable and function names that clearly express intent
-- Avoid unnecessary comments; code should be self-explanatory and self-documenting. Where applicable, default to better variable names in place of comments.
+- Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)
+- If something goes sideways, STOP and re-plan immediately
+- Write detailed specs upfront to reduce ambiguity
+- Use plan mode for verification steps, not just building
+- Assign a quality bar (1-10) to each todo item; all items must exceed 9/10 before marking complete
+
+### Subagent Strategy
+
+- Offload research, exploration, and parallel analysis to subagents to keep main context clean
+- For complex problems, use more compute via subagents
+- One task per subagent for focused execution
+
+### Task Tracking
+
+- Write plan to `~/.claude/todo.md` with checkable items for complex workflows
+- Check in before starting implementation
+- Mark items complete as you go
+- Add review summary to `~/.claude/todo.md` when done
+
+### Self-Improvement Loop
+
+- After ANY correction from the user: update `~/.claude/lessons.md` with the pattern
+- Write rules that prevent the same mistake
+- Review `~/.claude/lessons.md` at session start
 
 ## Development Practices
 
-### Best Practices
+### Implementation
 
 - Propose changes in logically separated commit-sized chunks
-- If a task requires multiple commits, propose each change individually
-- When talking about code, always reference specific file paths and lines
+- Read surrounding context before making changes
+- Look for similar implementations as examples
+- Prefer editing existing files over creating new ones
+- Follow SOLID principles; prefer composition over inheritance
 
-### Version Control
+### Verification Before Done
+
+- Never mark a task complete without proving it works
+- Run tests, check logs, demonstrate correctness
+- Diff behavior between main and your changes when relevant
+- Ask yourself: "Would a staff engineer approve this?"
+
+### Elegance Check
+
+- For non-trivial changes: pause and ask "is there a more elegant way?"
+- If a fix feels hacky, step back and implement the elegant solution
+- Skip this for simple, obvious fixes - don't over-engineer
+
+### Autonomous Bug Fixing
+
+- When given a bug report: just fix it. Don't ask for hand-holding.
+- Point at logs, errors, failing tests -> then resolve them
+- Fix failing CI tests without being told how
+
+### TypeScript Specific
+
+- Ensure types are valid and passing compile checks
+- Resolve all linting/formatting before marking done
+
+## Version Control
 
 - Never commit unless explicitly asked
-- Use descriptive commit messages focusing on "why" not just "what" (include feat:, fix:, refactor:, etc. at the start)
-- Always use `git push --force-with-lease` instead of `--force`
-- Run `git status` and `git diff` before any commit operations
 
-### Performance Considerations
-
-- Be mindful of context usage - batch related operations when possible
-- Use appropriate tools for the task (grep for search, not bash find)
-- Clear context with /clear when starting new unrelated tasks
-
-## Tool Usage Guidelines
-
-### GitHub
-
-- Use `gh` to lookup the details of GitHub issues and pull requests.
-- Where applicable, default to using Graphite for pull request batching through stacks.
-  - This keeps our implementation process lean and allows us to ship incrementally without creating oversize pull requests.
+## Tool Usage
 
 ### File Operations
 
-- Always use absolute paths, not relative paths
-- Verify parent directories exist before creating new files/folders
+- Always use absolute paths
+- Verify parent directories exist before creating files
 - Use Read before Edit to understand existing code
 - Batch multiple file reads when investigating related code
 
 ### Search and Navigation
 
-- Use Grep for code searches, not bash grep/find commands
 - Use Glob for file pattern matching
-- Use Task tool for complex multi-step searches
-- Include file paths and line numbers when referencing code
+- Use Grep for code searches (not bash grep/find)
+- Use Task tool with subagents for complex multi-step searches
 
-### Testing and Validation
+### GitHub
 
-- Look for project-specific test commands in package.json, Makefile, etc.
-- Run relevant tests after making changes
-- Verify changes don't break existing functionality
+- Use `gh` to lookup GitHub issues and pull requests
 
-## Security and Safety
-
-### Best Practices
+## Security
 
 - Never expose or log secrets, API keys, or credentials
-- Be cautious with user input - validate and sanitize when appropriate
-- Refuse requests for malicious code while explaining defensive alternatives
-- Always consider security implications of suggested changes
-
-### Defensive Approach
-
+- Validate and sanitize user input
 - Think before executing potentially destructive operations
-- Use transactions or dry-runs when available
-- Confirm understanding before making significant changes
+- Refuse requests for malicious code while explaining defensive alternatives
 
 ## Project Analysis
 
-### Initial Exploration
+When exploring a new project:
 
-- Check for README, CONTRIBUTING, and documentation files
-- Look for existing CLAUDE.md or similar project instructions
-- Identify the tech stack and project structure
-- Understand build/test/deploy workflows
-
-### Code Understanding
-
-- Read surrounding context before making changes
-- Understand the "why" behind existing patterns
-- Look for similar implementations as examples
-- Consider broader impacts of changes
-
-## Personal Preferences
-
-### Coding Philosophy
-
-- Follow SOLID principles (Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Injection)
-- Favor clarity over cleverness
-- Write code for humans to read, not just machines to execute
-- Prefer composition over inheritance
-
-### Problem Solving
-
-- Think through the approach before diving into implementation
-- Consider edge cases and error scenarios
-- Ask clarifying questions when requirements are ambiguous
-- Validate assumptions before proceeding
-
-## Productivity Tips
-
-### Efficiency
-
-- Use thinking mode ("ultra think") for complex problems
-- Batch similar operations together
-- Leverage visual capabilities for UI/UX tasks
-- Don't reinvent the wheel - use existing utilities and libraries
-
-### Communication
-
-- Summarize key findings and decisions
-- Highlight important warnings or considerations
-- Use markdown formatting for clarity
-- Keep responses focused on the task at hand
+1. Check for README, CONTRIBUTING, and documentation files
+2. Look for existing CLAUDE.md or similar instructions
+3. Identify tech stack and project structure
+4. Understand build/test/deploy workflows
+5. Understand the "why" behind existing patterns
