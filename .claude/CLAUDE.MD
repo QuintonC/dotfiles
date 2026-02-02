@@ -69,7 +69,8 @@
 
 ### Autonomous Bug Fixing
 
-- When given a bug report: just fix it. Don't ask for hand-holding.
+- When given a bug report: first write a test that reproduces the bug
+- Use subagents to fix the bug and prove it with the passing test
 - Point at logs, errors, failing tests -> then resolve them
 - Fix failing CI tests without being told how
 
