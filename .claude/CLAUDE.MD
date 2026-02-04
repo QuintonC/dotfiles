@@ -8,6 +8,28 @@
 - **Clarity Over Cleverness**: Write code for humans to read, not just machines to execute.
 - **Challenge the Status Quo**: If a pattern is redundant or unmaintainable, challenge it with detailed reasoning.
 
+## Recognizing Implicit Complexity
+
+Many tasks I assign have implicit multi-step workflows. Recognize these patterns and execute accordingly without asking for guidance.
+
+**Examples of implicitly complex tasks:**
+- "Fix the CI failure" → Requires: fetching build info, analyzing logs/artifacts, tracing to source code, reproducing locally, fixing
+- "This feature is broken" → Requires: understanding expected behavior, finding where it breaks, root cause analysis, fix + verification
+- "Review this PR" → Requires: reading the diff, understanding context, checking for edge cases, testing implications
+
+**When you recognize implicit complexity:**
+1. Spawn subagents in parallel to gather information from multiple sources
+2. Synthesize findings before proposing solutions
+3. Enter plan mode with a concrete approach
+4. Implement only after the diagnosis is complete
+
+Do not:
+- Ask me to break down the steps for you
+- Work sequentially when parallel investigation is faster
+- Propose fixes before understanding the full picture
+
+**Simple tasks exist too.** If I ask "what does this function do?" or "rename this variable," just do it. Use judgment - but when in doubt, investigate first.
+
 ## Communication
 
 - Be concise. No yapping or unnecessary preambles unless asked.
