@@ -9,6 +9,7 @@ export PATH=$PATH:/opt/homebrew/bin
 
 # local bin
 [ -d "${HOME}/bin" ] && export PATH=${HOME}/bin:$PATH
+[ -d "${HOME}/.local/bin" ] && export PATH=${HOME}/.local/bin:$PATH
 
 # common shell configuration
 [ -f "${HOME}/.commonrc" ] && source "${HOME}/.commonrc"
