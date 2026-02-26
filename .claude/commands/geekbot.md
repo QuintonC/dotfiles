@@ -111,7 +111,7 @@ Prepare a raw markdown message that I can use for my Geekbot standup for the `{t
 - For GitHub links, use the PR/issue title as the link text: `[PR title text](github.com/...)`
 - If there are GitHub links, try to pull the info from the pull request or issue using the `gh` CLI command. Use the PR/issue title as the link text.
   - For Graphite links, extract the `repository` and `organization` from the link and use gh CLI as instructed above.
-    - For example, https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number} would be a pull request in the `{organization}` organization, `{repository}` repository, and pull request number `{pull_request_number}`.
+    - This is the graphite link format, for context: https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number}
 - For example: "Shipped fix to [prevent duplicate email checks](https://github.com/{organization}/{repository}/pull/{pull_request_number})"
 
 ## Slack activity
@@ -194,7 +194,8 @@ Geekbot should ask three questions, but is subject to change.
 I want to use these reports to put together context for my impact reviews as well. To do this, you will need to create a new folder for the first report I make for each week. My first report for each week could take place on any day given holidays and vacation time.
 
 1. For the first report of each week, ensure that a new folder exists in `/Users/quintonchester/Activity/yyyy-ww` that correlates to the year and week number, `yyyy-ww`.
-   1. Week numbers should be non-zero based with the first week starting with week number 1.
+   1. Week numbers should use ISO 8601 week numbering (`%V`), NOT `%U` or `%W`.
+   2. **ALWAYS** verify the ISO week number by running `date -j -f "%Y-%m-%d" "{target_date}" "+%Y-%V"` before creating folders or saving files. Never assume the week number from existing folder names.
 2. Put together a markdown file, `{day_of_week}.md` with the **final** standup response that we've put together.
    - **IMPORTANT**: Sometimes we will need to iterate on the standup content. Please only capture the final output. I will indicate when the information you've provided me with is complete and should be logged into the weekly directory.
 3. If you notice that a file is missing for the previous day, let me know so we can make sure that it gets created from the prior history (I will pull forward context from the previous command run).
