@@ -104,6 +104,7 @@ Do not:
 ## Version Control
 
 - **NEVER** commit, push, create branches, or open PRs without **explicit** user consent — even in bypass permissions mode
+- **NEVER** edit PR descriptions, titles, labels, or any PR/issue metadata without **explicit** user consent — even in bypass permissions mode
 - "Put together a PR" or similar phrasing means "write the code"; it is NOT authorization to commit, push, or open a PR
 - After writing code, stop and show the diff. Wait for explicit approval before each git operation
 - This rule has no exceptions. When in doubt, ask first
