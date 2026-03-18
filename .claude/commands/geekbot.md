@@ -12,7 +12,6 @@ allowed-tools:
   - Read(/Users/quintonchester/Activity/**)
   - Write(/Users/quintonchester/Activity/**)
 description: Generate a geekbot message for my standup
-model: claude-opus-4-5
 name: geekbot
 hooks:
   Stop:
