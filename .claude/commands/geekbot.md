@@ -22,48 +22,52 @@ hooks:
 
 ## Context
 
-Run these bash commands to determine the current day and previous workday:
+This standup runs at the **end of the day** (4pm local). Run these bash commands to determine dates:
 
 - Day of week: !`date +%u`
 - Today: !`date "+%Y-%m-%d"`
 - Yesterday: !`date -v-1d "+%Y-%m-%d"`
+- Tomorrow: !`date -v+1d "+%Y-%m-%d"`
 - Three days ago: !`date -v-3d "+%Y-%m-%d"`
 - Day name today: !`date +%A`
-- Day name yesterday: !`date -v-1d +%A`
+- Next workday: !`date -v+1d +%A`
 
-Based on the day of week number from the first command:
-- If day = 1 (Monday): Use "Three days ago" as previous workday, previous day number is 5, reference as "Friday", and look in the **previous week's folder** (week - 1)
-- If day = 2-5 (Tue-Fri): Use "Yesterday" as previous workday, previous day number is (day - 1), reference as "yesterday", and look in the **current week's folder**
+Based on the day of week number:
+- If day = 1 (Monday): Previous standup file is in the **previous week's folder** at `5.md` (Friday)
+- If day = 2-5 (Tue-Fri): Previous standup file is `{day - 1}.md` in the **current week's folder**
+- If day = 5 (Friday): "What will you do tomorrow?" becomes "What will you do Monday?"
 
 ## Instructions
 
 Based on the context above:
 - The day of week number tells us what day today is (1=Mon through 5=Fri)
-- Today's date is shown in YYYY-MM-DD format
-- Previous workday is the date we need to look back to
-- Previous day number is the file we need to check (1.md through 5.md)
-- Previous day name is how we reference it ("yesterday" or "Friday")
+- Today's date is used for gathering today's work
+- The previous standup file tells us what was planned (via its "What will you do tomorrow?" section)
 
 ### Overarching goal
 
 Prepare a raw markdown message that I can use for my Geekbot standup for the `{team_standup_name}` in Slack. Here are steps to accomplish this goal:
 
-- Look at my previous message from {previous_day_name}'s Geekbot submission using the files we created from the previous standup entry stored in `/Users/quintonchester/Activity/yyyy-ww/{previous_day_number}.md`.
-  - **IMPORTANT**: On Monday, the previous standup file is in the **previous week's folder** (e.g., if today is week 3, look in `2026-02/5.md` for Friday's standup).
+- Look at my previous standup entry stored in `/Users/quintonchester/Activity/yyyy-ww/{previous_day_number}.md`.
+  - **IMPORTANT**: On Monday, the previous standup file is in the **previous week's folder** (e.g., if today is week 13, look in the week 12 folder for `5.md`).
   - If no files exist in the Activity directory, fall back to using the `slack-mcp` to find previous interactions with the Geekbot application in Slack.
-  - If I didn't respond to the previous day, please reference the last time I responded to the Geekbot survey.
-- Use the `gworkspace-mcp` to get my calendar events for today and the previous workday.
+  - If I didn't respond the previous day, reference the last time I responded to the Geekbot survey.
+  - Check the previous standup's **"What will you do tomorrow?"** section to verify follow-through on planned work.
+- Use the `gworkspace-mcp` to get my calendar events for today and tomorrow.
   - Avoid referencing common events such as:
     - Lunch
     - Focus time
     - Any events marked as Personal
     - Instead, focus on meetings that I have for projects and one-on-ones.
-  - For today's events, use parameters:
+  - For today's events (to populate "What did you do today?"), use parameters:
     - `time_min: "today"`
     - `time_max: "tomorrow"`
     - `max_results: 20`
-  - For previous workday's events (to populate "What have you done"), query with the previous workday's date range.
-- If you see that an issue I linked in my previous "What will you do today" wasn't closed (through a linked pull request), check to see:
+  - For tomorrow's events (to inform "What will you do tomorrow?"), use parameters:
+    - `time_min: "tomorrow"`
+    - `time_max: "day after tomorrow"`
+    - `max_results: 20`
+- If you see that an issue I linked in my previous "What will you do tomorrow?" wasn't closed (through a linked pull request), check to see:
   - Is the linked PR waiting for reviewers?
   - Is this PR approved but hasn't yet been shipped either using the Graphite merge queue or `/shipit`?
   - Is there a linked PR?
@@ -79,6 +83,9 @@ Prepare a raw markdown message that I can use for my Geekbot standup for the `{t
 - Do not invent or assume activities (like "ATC rotation" or "reviewing PRs"), reference only the events that were returned from the `gworkspace-mcp` server
 - If unsure about something, omit it rather than guess
 - Match activities to what I said I would do in my previous standup
+- **Meetings ALWAYS go under the "General" section**, never under project-specific sections
+- Do not include activities I didn't actively participate in (e.g., threads I only observed but didn't contribute to)
+- Never drop links when referencing items. Always preserve link references when moving or editing text
 
 ## Slack handles
 
@@ -115,9 +122,9 @@ Prepare a raw markdown message that I can use for my Geekbot standup for the `{t
 
 ## Slack activity
 
-- Try to search slack for my interactions for {previous_workday}.
-- **IMPORANT**: Ensure the messages you are querying are `after:{previous_workday} before:{today}`.
-- **IMPORANT**: When searching Slack, explicitly specify date ranges with the current year.
+- Search Slack for my activity from the previous standup through now.
+- **IMPORTANT**: Use `my_messages` with `after:{yesterday} before:{tomorrow}` to ensure full coverage of any late-day activity from after the previous standup.
+- **IMPORTANT**: When searching Slack, explicitly specify date ranges with the current year.
   - Edge case warning: For the first report of the new year, please do refer to the most recent activity since my last update in Slack.
 - Summarize updates to at most 3 bullet points per channel.
   - For example, if I had a lot of activity in one channel, format the response using the channel name as the first-level of the list and sub-items as the second level. For example,
@@ -141,43 +148,44 @@ If there is nothing blocking my progress, provide a `-` as a response to the que
 
 Instead, structure the response according to the prompts from Geekbot.
 
-Geekbot should ask three questions, but is subject to change.
+Geekbot asks three questions:
 
-1. What have you done since yesterday? (On Monday, use "What have you done since Friday?")
-2. What will you do today?
+1. What did you do today?
+2. What will you do tomorrow?
 3. Anything blocking your progress?
 
 **Always provide the final standup in a markdown code block** using the three headers above.
 
 ### Section guidance
 
-- **"What have you done since {previous_day_name}?"**: Include work completed on the previous workday (Friday if Monday, yesterday otherwise). This captures work from the last standup through end of that day.
-- **"What will you do today?"**: Include work already done today AND planned work for the rest of the day. This section captures today's goals, including items already accomplished. Things done earlier today should appear here, not in "What have you done."
-- On Monday, change the first header to "What have you done since Friday?"
+- **"What did you do today?"**: All work completed today. Since this standup runs at end of day, this captures the full day's work with no ambiguity.
+- **"What will you do tomorrow?"**: Forward-looking planned work for the next workday. On Friday, change the header to "What will you do Monday?"
+- **Meetings**: Always list meetings under the "General" section, not under project-specific sections.
 
 ### Expected outcome example
 
 ```md
-## What have you done since yesterday?
+## What did you do today?
 
 - #proj-{project_channel}
-  - Shipped policy PRs ({frontend_package} and {backend_service})
-  - Shipped [presentation mode change tracking](https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number})
-  - Opened fix to [prevent duplicate email checks from being made](https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number})
-  - Opened fix to [resolve issue with incorrect email matched lockup](https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number})
-  - Opened fix to [handle fallback / edge case where profile hydration fails](https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number})
-  - Sync meeting
-
-## What will you do today?
-
-- #proj-{project_channel}
-  - Shipped all PRs I’ve opened yesterday (last three mentioned PRs)
-  - Opened a PR to [ensure the dismiss post message only posts after the iframe has loaded](https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number})
-  - Implement the animation from the button to card presentation mode
-  - Upgrade {internal_package} package in {backend_service} to get the updated fonts in {backend_service}
-  - Start writing the bug hunt document
+  - Shipped [PR title](https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number})
+  - Opened fix to [issue description](https://app.graphite.dev/github/pr/{organization}/{repository}/{pull_request_number})
+  - Participated in [#help-dev-platform thread on topic](https://shopify.slack.com/archives/{channel_id}/{message_ts})
+    - Key outcome or decision from the thread
+- #proj-{another_channel}
+  - Paired with @{colleague} on feature work
+  - Found root cause of issue and opened [fix PR title](https://github.com/{organization}/{repository}/pull/{pull_request_number})
 - General
-  - Experience backlog grooming
+  - Project sync meeting
+  - 1-1 with @{colleague}
+    - Paired on topic
+  - Backlog grooming
+
+## What will you do tomorrow?
+
+- #proj-{project_channel}
+  - Ship [PR title](https://github.com/{organization}/{repository}/pull/{pull_request_number}) once CI is green
+  - Continue work on [issue title](https://github.com/{organization}/{repository}/issues/{issue_number})
 
 ## Anything blocking your progress?
 

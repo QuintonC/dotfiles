@@ -7,7 +7,7 @@
 
 // Optional parameters:
 // @raycast.icon 🤖
-// @raycast.argument1 { "type": "dropdown", "placeholder": "Section", "data": [{"title": "Yesterday", "value": "1"}, {"title": "Today", "value": "2"}, {"title": "Blockers", "value": "3"}] }
+// @raycast.argument1 { "type": "dropdown", "placeholder": "Section", "data": [{"title": "Today", "value": "1"}, {"title": "Tomorrow", "value": "2"}, {"title": "Blockers", "value": "3"}] }
 
 // Documentation:
 // @raycast.description Copies a section of today's standup as rich text with clickable links
