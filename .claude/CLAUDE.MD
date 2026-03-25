@@ -103,11 +103,19 @@ Do not:
 
 ## Version Control
 
-- **NEVER** commit, push, create branches, or open PRs without **explicit** user consent — even in bypass permissions mode
-- **NEVER** edit PR descriptions, titles, labels, or any PR/issue metadata without **explicit** user consent — even in bypass permissions mode
-- "Put together a PR" or similar phrasing means "write the code"; it is NOT authorization to commit, push, or open a PR
-- After writing code, stop and show the diff. Wait for explicit approval before each git operation
-- This rule has no exceptions. When in doubt, ask first
+- Commits, pushes, branch creation, and PRs are **encouraged** — but always confirm before executing, even in bypass permissions mode
+- After writing code, show the diff and propose the git operation (commit message, branch name, PR title). Wait for a "go ahead" before running it
+- When multiple git steps are needed (e.g., commit → push → open PR), confirm once upfront with the full plan rather than asking at each step
+- Only suggest updating a PR description/title when revisions materially change what the PR does — not for every push or minor fixup
+- Never edit PR labels, reviewers, or issue metadata without asking first
+
+### CLI Preference (in order)
+
+1. **Graphite (`gt`)** — preferred for commits, branches, stacking, and PRs (e.g., `gt create`, `gt submit`)
+2. **GitHub CLI (`gh`)** — fallback for PR operations if Graphite is not installed
+3. **`git`** — last resort if neither `gt` nor `gh` is available
+
+Check which tools are available at the start of a session before running git operations. Do not assume any CLI is installed.
 
 ## Tool Usage
 
