@@ -111,11 +111,28 @@ Do not:
 
 ### CLI Preference (in order)
 
-1. **Graphite (`gt`)** — preferred for commits, branches, stacking, and PRs (e.g., `gt create`, `gt submit`)
+1. **Graphite (`gt`)** — preferred for commits, branches, stacking, and PRs
 2. **GitHub CLI (`gh`)** — fallback for PR operations if Graphite is not installed
 3. **`git`** — last resort if neither `gt` nor `gh` is available
 
 Check which tools are available at the start of a session before running git operations. Do not assume any CLI is installed.
+
+### Graphite Workflow
+
+Use `gt create` for the full commit-and-branch flow in one step:
+```bash
+gt create <branch-name> -a -m "$(cat <<'EOF'
+Commit message here.
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+EOF
+)"
+```
+- `-a` stages all changes (tracked + untracked). Use `-u` to only stage tracked files.
+- `-m` sets the commit message. Include `Co-Authored-By` trailer in the message body.
+- Without `-a` or `-u`, only pre-staged changes are committed. Without staged changes, an empty branch is created.
+- `gt submit` pushes and creates/updates PRs on GitHub.
+- `gt track --parent <branch>` fixes parent relationships if a branch ends up in the wrong stack.
 
 ## Tool Usage
 
@@ -135,6 +152,7 @@ Check which tools are available at the start of a session before running git ope
 ### GitHub
 
 - Use `gh` to lookup GitHub issues and pull requests
+- **CRITICAL: When using `gh pr edit`, `gh pr view`, `gh pr comment`, or any `gh` command that targets a specific PR, ALWAYS pass `--repo owner/repo` explicitly.** The `gh` CLI resolves the repo from the git remote, which in worktrees or monorepos may not match the repo the user specified. Never rely on implicit repo resolution — always use the `--repo` flag with the exact `owner/repo` the user gave you. Getting this wrong overwrites other people's PRs.
 
 ## Security
 
