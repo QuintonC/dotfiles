@@ -19,6 +19,12 @@ export PATH=$PATH:/opt/homebrew/bin
 [ -z "$BUN_INSTALL" ] && export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
+# pnpm configuration
+if [ -d "$HOME/.local/share/pnpm" ]; then
+  export PNPM_HOME="$HOME/.local/share/pnpm"
+  export PATH="$PNPM_HOME:$PATH"
+fi
+
 # nvm
 [ ! -d "$HOME/.nvm" ] && mkdir -p "$HOME/.nvm"
 [ -z "$NVM_DIR" ] && export NVM_DIR="$HOME/.nvm"
