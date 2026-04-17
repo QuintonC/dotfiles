@@ -9,6 +9,7 @@ export PATH=$PATH:/opt/homebrew/bin
 
 # local bin
 [ -d "${HOME}/bin" ] && export PATH=${HOME}/bin:$PATH
+[ -d "${HOME}/.local/bin" ] && export PATH=${HOME}/.local/bin:$PATH
 
 # common shell configuration
 [ -f "${HOME}/.commonrc" ] && source "${HOME}/.commonrc"
@@ -30,6 +31,9 @@ fi
 [ -z "$NVM_DIR" ] && export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
+# postgres
+export PATH="/usr/local/opt/postgresql@15/bin:$PATH"
 
 # rbenv
 # eval "$(rbenv init -)"
