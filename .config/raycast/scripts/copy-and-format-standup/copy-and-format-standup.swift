@@ -28,7 +28,7 @@ let weekday = calendar.component(.weekday, from: now)
 let isoDay = weekday == 1 ? 7 : weekday - 1
 
 let home = FileManager.default.homeDirectoryForCurrentUser.path
-let filePath = "\(home)/Activity/\(year)-\(String(format: "%02d", week))/\(isoDay).md"
+let filePath = "\(home)/quintonc/activity/\(year)-\(String(format: "%02d", week))/\(isoDay).md"
 
 guard let content = try? String(contentsOfFile: filePath, encoding: .utf8) else {
     print("Could not read \(filePath)")

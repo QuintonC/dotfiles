@@ -20,7 +20,7 @@ tell application "Ghostty"
     tell application "System Events"
         keystroke "t" using command down
         delay 0.2
-        keystroke "cd ~/Activity && devx claude --dangerously-skip-permissions /geekbot"
+        keystroke "cd ~/quintonc/activity && devx claude --dangerously-skip-permissions /geekbot"
         delay 0.1
         key code 36
     end tell
