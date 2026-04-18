@@ -1,16 +1,4 @@
 ---
-allowed-tools:
-  - Bash(date*)
-  - Bash(gh search prs --author=@me *)
-  - Bash(gh pr view *)
-  - Bash(gh pr list *)
-  - Bash(gh issue view *)
-  - Bash(mkdir *)
-  - Glob
-  - mcp__slack-mcp__get_messages
-  - mcp__gworkspace-mcp__calendar_events
-  - Read(/Users/quintonchester/quintonc/activity/**)
-  - Write(/Users/quintonchester/quintonc/activity/**)
 description: Generate a geekbot message for my standup
 name: geekbot
 hooks:
@@ -48,7 +36,12 @@ Based on the context above:
 
 Prepare a raw markdown message that I can use for my Geekbot standup for the `{team_standup_name}` in Slack. Here are steps to accomplish this goal:
 
-- Look at my previous standup entry stored in `/Users/quintonchester/quintonc/activity/yyyy-ww/{previous_day_number}.md`.
+- Read today's daily note at `~/quintonc/engram/daily/{yyyy-mm-dd}.md` (e.g., `2026-04-17.md`) if it exists.
+  - This is my running journal for the day — meetings I prepped for, work I noted, decisions made, and personal `// ` comments.
+  - Weight it heavily for "What did you do today?".
+  - Treat it as one source among several — the daily note does NOT capture in-flight GitHub PR/issue activity or Slack threads.
+  - Always cross-reference with calendar, Slack, and GitHub for the complete picture.
+- Look at my previous standup entry stored in `~/quintonc/activity/yyyy-ww/{previous_day_number}.md`.
   - **IMPORTANT**: On Monday, the previous standup file is in the **previous week's folder** (e.g., if today is week 13, look in the week 12 folder for `5.md`).
   - If no files exist in the Activity directory, fall back to using the `slack-mcp` to find previous interactions with the Geekbot application in Slack.
   - If I didn't respond the previous day, reference the last time I responded to the Geekbot survey.
@@ -200,7 +193,7 @@ Geekbot asks three questions:
 
 I want to use these reports to put together context for my impact reviews as well. To do this, you will need to create a new folder for the first report I make for each week. My first report for each week could take place on any day given holidays and vacation time.
 
-1. For the first report of each week, ensure that a new folder exists in `/Users/quintonchester/quintonc/activity/yyyy-ww` that correlates to the year and week number, `yyyy-ww`.
+1. For the first report of each week, ensure that a new folder exists in `~/quintonc/activity/yyyy-ww` that correlates to the year and week number, `yyyy-ww`.
    1. Week numbers should use ISO 8601 week numbering (`%V`), NOT `%U` or `%W`.
    2. **ALWAYS** verify the ISO week number by running `date -j -f "%Y-%m-%d" "{target_date}" "+%Y-%V"` before creating folders or saving files. Never assume the week number from existing folder names.
 2. Put together a markdown file, `{day_of_week}.md` with the **final** standup response that we've put together.
