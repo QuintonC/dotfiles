@@ -37,6 +37,10 @@ Do not:
 - Reference specific file paths and lines when discussing code.
 - Summarize key findings and highlight important warnings.
 
+## Writing Prose
+
+When asked to write any prose — PR descriptions, docs, memos, Slack/email drafts, release notes, or commit bodies longer than one line — read and follow `~/.claude/references/writing_principles.md` before drafting.
+
 ## Workflow Orchestration
 
 ### Plan Mode
