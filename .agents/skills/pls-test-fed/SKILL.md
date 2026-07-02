@@ -1,30 +1,19 @@
 ---
-name: pls_test_fed
-description: Analyze test coverage and write comprehensive frontend tests
-arguments:
-  - name: file_path
-    description: Path to file to analyze and test (optional, defaults to git diff)
-    required: false
-allowed-tools: Bash(git diff:*), Bash(git diff --cached:*)
+name: pls-test-fed
+description: Analyze test coverage and write comprehensive frontend tests (TS/TSX/JS/JSX) following expert conventions, for a specific file or for changed files. Use when the user asks to write, generate, or improve frontend/React/component/hook/util tests, or mentions "pls test" for frontend code.
 ---
 
-# Frontend Test Coverage Command
+# Frontend Test Coverage (frontend)
 
-Analyze test coverage for a given file and write comprehensive tests following expert frontend conventions.
+Analyze test coverage for the target file(s) and write comprehensive tests following expert frontend conventions.
 
-## Target
+## Target selection
 
-```
-$ARGUMENTS
-```
-
-If no target file is specified above, use the changed files from the context below.
-
-# Context
-
-- Changed frontend files (unstaged): !`git diff --name-only -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -v -E '\.(test|spec)\.' || true`
-- Changed frontend files (staged): !`git diff --cached --name-only -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -v -E '\.(test|spec)\.' || true`
-- Git diff (unstaged): !`git diff -- '*.ts' '*.tsx' '*.js' '*.jsx' | head -500 || true`
+- If a file path is provided as an argument, analyze and test that file.
+- If no path is given, determine the changed frontend files by running these via the `bash` tool:
+  - Unstaged: `git diff --name-only -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -v -E '\.(test|spec)\.' || true`
+  - Staged: `git diff --cached --name-only -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -v -E '\.(test|spec)\.' || true`
+  - For context, inspect the diff: `git diff -- '*.ts' '*.tsx' '*.js' '*.jsx' | head -500 || true`
 
 ## Execution Steps
 
@@ -41,7 +30,7 @@ Read each target file and understand:
 ### 2. Test Discovery
 
 Search for existing tests:
-- Check `__tests__/` directories adjacent to file
+- Check `__tests__/` directories adjacent to the file
 - Check `*.test.ts`, `*.test.tsx`, `*.spec.ts`, `*.spec.tsx` patterns
 - Check project test directory structure (e.g., `tests/`, `spec/`)
 - Identify the test framework in use (Jest, Vitest, React Testing Library, etc.)
@@ -65,7 +54,7 @@ Write tests following these principles:
 
 - Use descriptive `describe` blocks that mirror the module structure
 - Use `it` statements that read as complete sentences describing behavior
-- Group related assertions in single tests for completeness
+- Group related assertions in a single test for completeness
 - Separate tests ONLY for distinct side effects (metrics, analytics, logging)
 
 #### Test Helpers (REQUIRED for components)

@@ -18,9 +18,11 @@ fi
 
 # .dotfiles to bootstrap
 declare -a BOOTSTRAP_FILES=(
+  .agents
   .claude
   .config
   .oh-my-zsh
+  .pi
   .gitconfig.local
   .tmux.conf
   .zshrc.d

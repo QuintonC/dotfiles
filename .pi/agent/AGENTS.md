@@ -1,4 +1,7 @@
-# Claude Code Instructions
+# Agent Instructions
+
+> Harness-neutral working agreement. Loaded globally by pi from `~/.pi/agent/AGENTS.md`.
+> The Claude-specific variant lives at `~/.claude/CLAUDE.MD`; keep shared principles in sync.
 
 ## Core Principles
 
@@ -10,7 +13,7 @@
 
 ## Recognizing Implicit Complexity
 
-Many tasks I assign have implicit multi-step workflows. Recognize these patterns and execute accordingly without asking for guidance.
+Many tasks have implicit multi-step workflows. Recognize these patterns and execute accordingly without asking for guidance.
 
 **Examples of implicitly complex tasks:**
 - "Fix the CI failure" → Requires: fetching build info, analyzing logs/artifacts, tracing to source code, reproducing locally, fixing
@@ -18,17 +21,16 @@ Many tasks I assign have implicit multi-step workflows. Recognize these patterns
 - "Review this PR" → Requires: reading the diff, understanding context, checking for edge cases, testing implications
 
 **When you recognize implicit complexity:**
-1. Spawn subagents in parallel to gather information from multiple sources
-2. Synthesize findings before proposing solutions
-3. Enter plan mode with a concrete approach
+1. Gather information from all relevant sources before proposing solutions — read the surrounding code, logs, and tests first
+2. Synthesize findings before proposing a solution
+3. Write a concrete approach (to a scratch file or the message) before implementing
 4. Implement only after the diagnosis is complete
 
 Do not:
 - Ask me to break down the steps for you
-- Work sequentially when parallel investigation is faster
 - Propose fixes before understanding the full picture
 
-**Simple tasks exist too.** If I ask "what does this function do?" or "rename this variable," just do it. Use judgment - but when in doubt, investigate first.
+**Simple tasks exist too.** If I ask "what does this function do?" or "rename this variable," just do it. Use judgment — but when in doubt, investigate first.
 
 ## Communication
 
@@ -54,32 +56,28 @@ If the file is missing, tell me rather than guessing at the conventions.
 
 ## Workflow Orchestration
 
-### Plan Mode
+pi has no built-in plan mode, sub-agents, or to-do system. Achieve the same outcomes with discipline:
 
-- Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)
-- If something goes sideways, STOP and re-plan immediately
-- Write detailed specs upfront to reduce ambiguity
-- Use plan mode for verification steps, not just building
-- Assign a quality bar (1-10) to each todo item; all items must exceed 9/10 before marking complete
+### Planning
 
-### Subagent Strategy
+- For ANY non-trivial task (3+ steps or architectural decisions), write a plan before acting.
+- Capture the plan in `~/.claude/todo.md` (shared across harnesses) with checkable items, or inline in your response for small tasks.
+- Assign a quality bar (1-10) to each item; all items must exceed 9/10 before marking complete.
+- If something goes sideways, STOP and re-plan immediately.
+- Use planning for verification steps, not just building.
+- Check in before starting implementation on large work. Mark items complete as you go. Add a review summary when done.
 
-- Offload research, exploration, and parallel analysis to subagents to keep main context clean
-- For complex problems, use more compute via subagents
-- One task per subagent for focused execution
+### Investigation
 
-### Task Tracking
-
-- Write plan to `~/.claude/todo.md` with checkable items for complex workflows
-- Check in before starting implementation
-- Mark items complete as you go
-- Add review summary to `~/.claude/todo.md` when done
+- For complex problems, do the deeper investigation up front rather than guessing.
+- Keep context clean: read only what's relevant, and prefer targeted searches over dumping whole trees.
+- One concern at a time — finish a focused thread of investigation before branching.
 
 ### Self-Improvement Loop
 
-- After ANY correction from the user: update `~/.claude/lessons.md` with the pattern
-- Write rules that prevent the same mistake
-- Review `~/.claude/lessons.md` at session start
+- After ANY correction from the user: append the pattern to `~/.claude/lessons.md`.
+- Write rules that prevent the same mistake.
+- Review `~/.claude/lessons.md` at session start.
 
 ## Development Practices
 
@@ -102,12 +100,12 @@ If the file is missing, tell me rather than guessing at the conventions.
 
 - For non-trivial changes: pause and ask "is there a more elegant way?"
 - If a fix feels hacky, step back and implement the elegant solution
-- Skip this for simple, obvious fixes - don't over-engineer
+- Skip this for simple, obvious fixes — don't over-engineer
 
 ### Autonomous Bug Fixing
 
 - When given a bug report: first write a test that reproduces the bug
-- Use subagents to fix the bug and prove it with the passing test
+- Fix the bug and prove it with the passing test
 - Point at logs, errors, failing tests -> then resolve them
 - Fix failing CI tests without being told how
 
@@ -118,7 +116,7 @@ If the file is missing, tell me rather than guessing at the conventions.
 
 ## Version Control
 
-- Commits, pushes, branch creation, and PRs are **encouraged** — but always confirm before executing, even in bypass permissions mode
+- Commits, pushes, branch creation, and PRs are **encouraged** — but always confirm before executing, even when running with relaxed permissions
 - After writing code, show the diff and propose the git operation (commit message, branch name, PR title). Wait for a "go ahead" before running it
 - When multiple git steps are needed (e.g., commit → push → open PR), confirm once upfront with the full plan rather than asking at each step
 - Only suggest updating a PR description/title when revisions materially change what the PR does — not for every push or minor fixup
@@ -140,30 +138,32 @@ Use `gt create` for the full commit-and-branch flow in one step:
 gt create <branch-name> -a -m "$(cat <<'EOF'
 Commit message here.
 
-Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+Co-Authored-By: pi <noreply@pi.dev>
 EOF
 )"
 ```
 - `-a` stages all changes (tracked + untracked). Use `-u` to only stage tracked files.
-- `-m` sets the commit message. Include `Co-Authored-By` trailer in the message body.
+- `-m` sets the commit message. Include a `Co-Authored-By` trailer that reflects the model actually used.
 - Without `-a` or `-u`, only pre-staged changes are committed. Without staged changes, an empty branch is created.
 - `gt submit` pushes and creates/updates PRs on GitHub.
 - `gt track --parent <branch>` fixes parent relationships if a branch ends up in the wrong stack.
 
 ## Tool Usage
 
+pi's built-in tools are `read`, `write`, `edit`, `bash`, `grep`, `find`, and `ls`. There is no separate Glob/Task tool.
+
 ### File Operations
 
 - Always use absolute paths
 - Verify parent directories exist before creating files
-- Use Read before Edit to understand existing code
+- Use `read` before `edit` to understand existing code
 - Batch multiple file reads when investigating related code
 
 ### Search and Navigation
 
-- Use Glob for file pattern matching
-- Use Grep for code searches (not bash grep/find)
-- Use Task tool with subagents for complex multi-step searches
+- Use the `find` tool for file pattern matching and the `grep` tool for code searches
+- Prefer these tools over shelling out to `grep`/`find` via `bash` for searches
+- For multi-step searches, run independent searches in parallel
 
 ### GitHub
 
@@ -182,7 +182,7 @@ EOF
 When exploring a new project:
 
 1. Check for README, CONTRIBUTING, and documentation files
-2. Look for existing CLAUDE.md or similar instructions
+2. Look for existing AGENTS.md / CLAUDE.md or similar instructions
 3. Identify tech stack and project structure
 4. Understand build/test/deploy workflows
 5. Understand the "why" behind existing patterns
