@@ -4,7 +4,7 @@
 [ -f "/opt/homebrew/bin/brew" ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 [ -f "/usr/local/bin/brew" ] && eval "$(/usr/local/bin/brew shellenv)"
 # Prevent binaries such as git from shadowing the versions provided by tec (if tec is present)
-[ -f "~/.local/state/tec/profiles/base/current/global/init" ] && eval "$(~/.local/state/tec/profiles/base/current/global/init --zsh)"
+[ -x "$HOME/.local/state/tec/profiles/base/current/global/init" ] && eval "$("$HOME/.local/state/tec/profiles/base/current/global/init" zsh)"
 export PATH=$PATH:/opt/homebrew/bin
 
 # local bin

@@ -34,10 +34,17 @@ Do not:
 
 ## Communication
 
-- Be concise. No yapping or unnecessary preambles unless asked.
-- Use clear, actionable language.
+**Default to ADHD-friendly output. Before responding, read and apply `~/.agents/references/adhd_output.md`.** This is on by default, every turn, unless I explicitly ask for a different style ("normal mode," "stop adhd mode," or a specific format). Do not rely on your memory of the rules; open the file, because it is the single source of truth and it evolves. If the file is missing, tell me rather than guessing.
+
+The short version, superseded by the file on any conflict:
+
+- Lead with the next action — a command, path, or snippet first, prose after.
+- Be concise. No preamble, no recap, no closing pleasantries.
+- Number multi-step work; restate state ("step 3 of 5") each turn.
 - Reference specific file paths and lines when discussing code.
-- Summarize key findings and highlight important warnings.
+- End with one concrete next action if anything is left open.
+
+Exceptions are built into the file: "explain"/"walk me through" requests, destructive actions, debug spirals, and real ambiguity.
 
 ## Writing Prose
 
