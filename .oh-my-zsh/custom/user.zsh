@@ -41,6 +41,9 @@ export PATH="/usr/local/opt/postgresql@15/bin:$PATH"
 # starship
 eval "$(starship init zsh)"
 
+# eza
+alias ls="eza --color=auto --long --git xno-filesize --icons=always --no-time --no-user --no-permissions"
+
 # initialize git config
 touch "${HOME}/.gitconfig"
 if [ -f "${HOME}/.gitconfig.local" ]; then

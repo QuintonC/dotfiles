@@ -1,1 +1,0 @@
-alias ls="eza --color=auto --long --git --no-filesize --icons=always --no-time --no-user --no-permissions"
