@@ -13,6 +13,3 @@ plugins=(command-not-found git rails)
 
 # initialize omz
 source "${ZSH}/oh-my-zsh.sh"
-
-# configure user settings
-[ -f "${ZSH_CUSTOM}/user.zsh" ] && source "${ZSH_CUSTOM}/user.zsh"

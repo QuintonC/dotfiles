@@ -20,3 +20,5 @@ else
   ZSH_THEME="robbyrussell"
   source "${ZSH}/oh-my-zsh.sh"
 fi
+# Added by tec agent
+[[ -x /Users/quintonchester/.local/state/tec/profiles/base/current/global/init ]] && eval "$(/Users/quintonchester/.local/state/tec/profiles/base/current/global/init zsh)"
