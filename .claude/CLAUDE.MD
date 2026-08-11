@@ -32,32 +32,39 @@ Do not:
 
 ## Communication
 
-**Default to ADHD-friendly output. Before responding, read and apply `~/.agents/references/adhd_output.md`.** This is on by default, every turn, unless I explicitly ask for a different style ("normal mode," "stop adhd mode," or a specific format). Do not rely on your memory of the rules; open the file, because it is the single source of truth and it evolves. If the file is missing, tell me rather than guessing.
+Use concise, actionable output by default.
 
-The short version, superseded by the file on any conflict:
+- Start with the answer or next action. Do not use a preamble, recap, or closing pleasantry.
+- For multiple actions, use no more than five numbered steps. Make each step one bounded action.
+- For ongoing work, state the current step and make completed work visible.
+- Address one concern at a time. State errors as cause, evidence, and fix.
+- Use specific paths, lines, and commands when they help. If work remains, end with one concrete next action.
 
-- Lead with the next action — a command, path, or snippet first, prose after.
-- Be concise. No preamble, no recap, no closing pleasantries.
-- Number multi-step work; restate state ("step 3 of 5") each turn.
-- Reference specific file paths and lines when discussing code.
-- End with one concrete next action if anything is left open.
+Use a practical adaptation of ASD-STE100 Simplified Technical English (STE):
 
-Exceptions are built into the file: "explain"/"walk me through" requests, destructive actions, debug spirals, and real ambiguity.
+- Use short, complete sentences. Give one instruction per sentence.
+- Prefer active voice and positive statements.
+- Use one term for one concept. Avoid idioms, jargon, and unnecessary acronyms.
+- Permit code identifiers, quotations, and required technical terms. Technical accuracy has priority.
+- Do not claim formal ASD-STE100 compliance.
+
+Use progressive disclosure:
+
+- Complete the necessary analysis, but report only the conclusions and decision-relevant evidence.
+- Do not include the research process, source inventory, exhaustive citations, or a detailed plan unless the user requests them.
+- Include a caveat only when it changes the recommendation or next action.
+- If the request contains multiple concerns, give each a short conclusion. Expand only the concern that blocks progress.
+- Ask no more than one blocking question. Stop when the user has enough information to act.
+
+A request to explain, elaborate, or walk through a topic overrides brevity but not STE. A specific user request for a format, tone, or writing style overrides conflicting defaults. Safety checks and necessary clarification always have priority.
 
 ## Writing Prose
 
-**Before writing ANY prose, read and apply `~/.agents/references/writing_principles.md`.** This is mandatory — every time, whether I ask explicitly or you draft on your own initiative. Do not rely on your memory of the rules; open the file each time, because it is the single source of truth and it evolves.
+When drafting or revising a human-facing artifact, invoke and follow the `writing-prose` skill.
 
-Prose is anything written for a human to read rather than a machine to execute:
+This includes pull request and issue text, review responses, documentation, memos, proposals, design documents, Slack or email drafts, release notes, and changelogs.
 
-- PR descriptions and titles
-- Commit messages longer than one line
-- Docs, READMEs, and guides
-- Memos, proposals, and design docs
-- Slack and email drafts
-- Release notes and changelogs
-
-If the file is missing, tell me rather than guessing at the conventions.
+Do not invoke the skill for routine conversation or code comments. A user-requested format, tone, or style and an artifact-specific skill take precedence.
 
 ## Workflow Orchestration
 
