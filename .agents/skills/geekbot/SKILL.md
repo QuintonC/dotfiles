@@ -13,11 +13,11 @@ Run these bash commands (via the `bash` tool) to determine the relevant dates:
 
 - Day of week: `date +%u`
 - Today: `date "+%Y-%m-%d"`
-- Yesterday: `date -v-1d "+%Y-%m-%d"`
-- Tomorrow: `date -v+1d "+%Y-%m-%d"`
-- Three days ago: `date -v-3d "+%Y-%m-%d"`
+- Yesterday: `date -d "-1 day" "+%Y-%m-%d" 2>/dev/null || date -v-1d "+%Y-%m-%d"`
+- Tomorrow: `date -d "+1 day" "+%Y-%m-%d" 2>/dev/null || date -v+1d "+%Y-%m-%d"`
+- Three days ago: `date -d "-3 days" "+%Y-%m-%d" 2>/dev/null || date -v-3d "+%Y-%m-%d"`
 - Day name today: `date +%A`
-- Next workday: `date -v+1d +%A`
+- Next workday: `date -d "+1 day" +%A 2>/dev/null || date -v+1d +%A`
 
 Based on the day-of-week number:
 
@@ -173,7 +173,7 @@ These reports also build context for impact reviews. Create a new folder for the
 
 1. For the first report of each week, ensure a folder exists at `~/quintonc/activity/yyyy-ww` matching the year and week number, `yyyy-ww`.
    - Week numbers use ISO 8601 week numbering (`%V`), NOT `%U` or `%W`.
-   - **ALWAYS** verify the ISO week number by running `date -j -f "%Y-%m-%d" "{target_date}" "+%Y-%V"` before creating folders or saving files. Never assume the week number from existing folder names.
+   - **ALWAYS** verify the ISO week number by running `date -d "{target_date}" "+%Y-%V" 2>/dev/null || date -j -f "%Y-%m-%d" "{target_date}" "+%Y-%V"` before creating folders or saving files. Never assume the week number from existing folder names.
 2. Put together a markdown file, `{day_of_week}.md`, with the **final** standup response.
    - **IMPORTANT**: The standup content may be iterated on. Only capture the final output. The user will indicate when the information is complete and should be logged into the weekly directory.
 3. If a file is missing for the previous day, let the user know so it can be created from prior history.
