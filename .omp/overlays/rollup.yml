@@ -1,0 +1,32 @@
+# omp overlay for cheap, single-purpose runs: standups, rollups, summaries.
+#
+# Passed with `--config`, which sits above ~/.omp/agent/config.yml for one
+# process and is never persisted. Use it for work that is tool-heavy but not
+# reasoning-heavy, where the default Opus 5 / xhigh path is waste.
+#
+#   devx omp --config ~/.omp/overlays/rollup.yml 'Prepare my geekbot standup'
+#
+# Haiku 4.5 over a cheaper Gemini or GPT tier on purpose: these runs make many
+# sequential Tool Gateway calls (calendar, Slack, GitHub) and the output is
+# human-facing prose, so tool-call reliability and tone both matter.
+modelRoles:
+  default: anthropic/claude-haiku-4-5:medium
+
+defaultThinkingLevel: medium
+
+# Nothing here needs a second opinion, and the advisor doubles the token cost
+# of every turn. There is no --no-advisor flag, which is why this lives in an
+# overlay rather than in the launch command.
+advisor:
+  enabled: false
+
+# Global plan.defaultOnStartup is true. Plan mode would run this on the `plan`
+# role (Opus 5 at max) before any work started.
+plan:
+  defaultOnStartup: false
+
+# Skip the post-stop lesson-capture nudge. Daily rollups produce no reusable
+# lessons and would only add noise to the memory bank. Mnemopi recall and
+# retain stay on, so prior standups in this directory remain available.
+autolearn:
+  enabled: false

@@ -22,6 +22,7 @@ declare -a BOOTSTRAP_FILES=(
   .claude
   .config
   .oh-my-zsh
+  .omp
   .pi
   .gitconfig.local
   .tmux.conf

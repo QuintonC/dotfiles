@@ -9,7 +9,7 @@
 # @raycast.icon 🤖
 
 # Documentation:
-# @raycast.description Open Ghostty and run devx claude, triggering the geekbot skill
+# @raycast.description Open Ghostty and run devx omp, triggering the geekbot skill
 # @raycast.author quinton
 # @raycast.authorURL https://raycast.com/quinton
 
@@ -20,7 +20,7 @@ tell application "Ghostty"
     tell application "System Events"
         keystroke "t" using command down
         delay 0.2
-        keystroke "cd ~/quintonc/activity && devx claude --dangerously-skip-permissions 'Prepare my geekbot standup'"
+        keystroke "cd ~/quintonc/activity && devx omp --config ~/.omp/overlays/rollup.yml --approval-mode yolo 'Prepare my geekbot standup'"
         delay 0.1
         key code 36
     end tell

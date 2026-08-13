@@ -132,9 +132,10 @@ Do not invoke the skill for routine conversation or code comments. A user-reques
 
 ## Version Control
 
-- Commits, pushes, branch creation, and PRs are **encouraged** — but always confirm before executing, even in bypass permissions mode
-- After writing code, show the diff and propose the git operation (commit message, branch name, PR title). Wait for a "go ahead" before running it
-- When multiple git steps are needed (e.g., commit → push → open PR), confirm once upfront with the full plan rather than asking at each step
+- When I ask you to commit, push, branch, or open a PR, run the whole flow without stopping to confirm. The request is the authorization
+- Do not run git operations I did not ask for. Finishing code is not a signal to commit it
+- Report the result afterward: branch name, commit subject, and PR URL. Show the diff only if I have not already seen it
+- Never force-push, rewrite published history, or delete a remote branch unless I name that specific operation
 - Only suggest updating a PR description/title when revisions materially change what the PR does — not for every push or minor fixup
 - PR descriptions, titles, and multi-line commit bodies are prose — apply the **Writing Prose** rule above before drafting them
 - Never edit PR labels, reviewers, or issue metadata without asking first
@@ -145,7 +146,7 @@ Do not invoke the skill for routine conversation or code comments. A user-reques
 2. **GitHub CLI (`gh`)** — fallback for PR operations if Graphite is not installed
 3. **`git`** — last resort if neither `gt` nor `gh` is available
 
-Check which tools are available at the start of a session before running git operations. Do not assume any CLI is installed.
+Check which tools are available before your first git operation in a session, not at startup. Do not assume any CLI is installed.
 
 ### Graphite Workflow
 
@@ -159,7 +160,7 @@ EOF
 )"
 ```
 - `-a` stages all changes (tracked + untracked). Use `-u` to only stage tracked files.
-- `-m` sets the commit message. Include `Co-Authored-By` trailer in the message body.
+- `-m` sets the commit message. Include a `Co-Authored-By` trailer that reflects the model actually used, not the example above.
 - Without `-a` or `-u`, only pre-staged changes are committed. Without staged changes, an empty branch is created.
 - `gt submit` pushes and creates/updates PRs on GitHub.
 - `gt track --parent <branch>` fixes parent relationships if a branch ends up in the wrong stack.

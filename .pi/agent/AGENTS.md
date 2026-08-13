@@ -1,7 +1,9 @@
 # Agent Instructions
 
-> Harness-neutral working agreement. Loaded globally by pi from `~/.pi/agent/AGENTS.md`.
-> The Claude-specific variant lives at `~/.claude/CLAUDE.MD`; keep shared principles in sync.
+> Harness-neutral working agreement. This is the canonical file, shared by pi
+> (`~/.pi/agent/AGENTS.md`) and omp (`~/.omp/agent/AGENTS.md`, a symlink to this file).
+> Describe capabilities, not one harness's tool names, so it stays true for both.
+> The Claude Code variant lives at `~/.claude/CLAUDE.MD`; keep shared principles in sync.
 
 ## Core Principles
 
@@ -70,12 +72,12 @@ Do not invoke the skill for routine conversation or code comments. A user-reques
 
 ## Workflow Orchestration
 
-pi has no built-in plan mode, sub-agents, or to-do system. Achieve the same outcomes with discipline:
+Use the harness's own plan mode, subagents, and task tracking when it provides them. Where it does not, reach the same outcomes with discipline:
 
 ### Planning
 
 - For ANY non-trivial task (3+ steps or architectural decisions), write a plan before acting.
-- Capture the plan in `~/.claude/todo.md` (shared across harnesses) with checkable items, or inline in your response for small tasks.
+- Track the plan in the session's own task list when the harness provides one. Otherwise capture it in `~/.claude/todo.md` with checkable items, or inline in your response for small tasks.
 - Assign a quality bar (1-10) to each item; all items must exceed 9/10 before marking complete.
 - If something goes sideways, STOP and re-plan immediately.
 - Use planning for verification steps, not just building.
@@ -84,6 +86,7 @@ pi has no built-in plan mode, sub-agents, or to-do system. Achieve the same outc
 ### Investigation
 
 - For complex problems, do the deeper investigation up front rather than guessing.
+- When the harness supports subagents, fan out independent research in parallel and keep the main context clean. One task per subagent.
 - Keep context clean: read only what's relevant, and prefer targeted searches over dumping whole trees.
 - One concern at a time — finish a focused thread of investigation before branching.
 
@@ -130,9 +133,10 @@ pi has no built-in plan mode, sub-agents, or to-do system. Achieve the same outc
 
 ## Version Control
 
-- Commits, pushes, branch creation, and PRs are **encouraged** — but always confirm before executing, even when running with relaxed permissions
-- After writing code, show the diff and propose the git operation (commit message, branch name, PR title). Wait for a "go ahead" before running it
-- When multiple git steps are needed (e.g., commit → push → open PR), confirm once upfront with the full plan rather than asking at each step
+- When I ask you to commit, push, branch, or open a PR, run the whole flow without stopping to confirm. The request is the authorization
+- Do not run git operations I did not ask for. Finishing code is not a signal to commit it
+- Report the result afterward: branch name, commit subject, and PR URL. Show the diff only if I have not already seen it
+- Never force-push, rewrite published history, or delete a remote branch unless I name that specific operation
 - Only suggest updating a PR description/title when revisions materially change what the PR does — not for every push or minor fixup
 - PR descriptions, titles, and multi-line commit bodies are prose — apply the **Writing Prose** rule above before drafting them
 - Never edit PR labels, reviewers, or issue metadata without asking first
@@ -143,7 +147,7 @@ pi has no built-in plan mode, sub-agents, or to-do system. Achieve the same outc
 2. **GitHub CLI (`gh`)** — fallback for PR operations if Graphite is not installed
 3. **`git`** — last resort if neither `gt` nor `gh` is available
 
-Check which tools are available at the start of a session before running git operations. Do not assume any CLI is installed.
+Check which tools are available before your first git operation in a session, not at startup. Do not assume any CLI is installed.
 
 ### Graphite Workflow
 
@@ -157,14 +161,14 @@ EOF
 )"
 ```
 - `-a` stages all changes (tracked + untracked). Use `-u` to only stage tracked files.
-- `-m` sets the commit message. Include a `Co-Authored-By` trailer that reflects the model actually used.
+- `-m` sets the commit message. Include a `Co-Authored-By` trailer that reflects the model actually used, not the example above.
 - Without `-a` or `-u`, only pre-staged changes are committed. Without staged changes, an empty branch is created.
 - `gt submit` pushes and creates/updates PRs on GitHub.
 - `gt track --parent <branch>` fixes parent relationships if a branch ends up in the wrong stack.
 
 ## Tool Usage
 
-pi's built-in tools are `read`, `write`, `edit`, `bash`, `grep`, `find`, and `ls`. There is no separate Glob/Task tool.
+Tool names and the available inventory vary by harness. Check what this session actually offers rather than assuming a fixed set, and never call a tool that has not been offered.
 
 ### File Operations
 
@@ -175,8 +179,8 @@ pi's built-in tools are `read`, `write`, `edit`, `bash`, `grep`, `find`, and `ls
 
 ### Search and Navigation
 
-- Use the `find` tool for file pattern matching and the `grep` tool for code searches
-- Prefer these tools over shelling out to `grep`/`find` via `bash` for searches
+- Use the dedicated file-pattern tool for path lookups and the dedicated search tool for content matches
+- Prefer those tools over shelling out to `grep`/`find` via `bash` for searches
 - For multi-step searches, run independent searches in parallel
 
 ### GitHub
