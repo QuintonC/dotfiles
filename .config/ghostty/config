@@ -19,5 +19,7 @@ keybind = cmd+left=text:\x01
 keybind = cmd+right=text:\x05
 
 # Working directory configurations
+split-inherit-working-directory = true
+tab-inherit-working-directory = true
 window-inherit-working-directory = true
 working-directory = home

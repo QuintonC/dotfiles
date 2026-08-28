@@ -1,2 +1,5 @@
 [keys]
 switch_workspace = "prefix+shift+1..9"
+
+[experimental]
+kitty_graphics = true
