@@ -140,6 +140,8 @@ Use the harness's own plan mode, subagents, and task tracking when it provides t
 - Only suggest updating a PR description/title when revisions materially change what the PR does — not for every push or minor fixup
 - PR descriptions, titles, and multi-line commit bodies are prose — apply the **Writing Prose** rule above before drafting them
 - Never edit PR labels, reviewers, or issue metadata without asking first
+- Never respond to GitHub comments, reviews, or review threads on my behalf: no replies, no reactions, no resolving, and no dismissing. This includes bot reviewers such as Binks
+- When I ask you to "resolve" or "address" a comment, investigate it and draft the reply or the fix in chat. I post replies and resolve threads myself
 
 ### CLI Preference (in order)
 
