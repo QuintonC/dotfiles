@@ -142,30 +142,31 @@ Do not invoke the skill for routine conversation or code comments. A user-reques
 - Never respond to GitHub comments, reviews, or review threads on my behalf: no replies, no reactions, no resolving, and no dismissing. This includes bot reviewers such as Binks
 - When I ask you to "resolve" or "address" a comment, investigate it and draft the reply or the fix in chat. I post replies and resolve threads myself
 
-### CLI Preference (in order)
+### CLI Preference
 
-1. **Graphite (`gt`)** — preferred for commits, branches, stacking, and PRs
-2. **GitHub CLI (`gh`)** — fallback for PR operations if Graphite is not installed
-3. **`git`** — last resort if neither `gt` nor `gh` is available
+- **GitHub CLI (`gh`)** — pull requests, issues, and other GitHub operations
+- **`git`** — commits, branches, and pushes
+- **The repository's `AGENTS.md`** — for a repository not hosted on GitHub, follow that repository's `AGENTS.md` for Git and review work
 
-Check which tools are available before your first git operation in a session, not at startup. Do not assume any CLI is installed.
+### GitHub Workflow
 
-### Graphite Workflow
-
-Use `gt create` for the full commit-and-branch flow in one step:
+Commit with `git`, then push and open the PR with `gh`:
 ```bash
-gt create <branch-name> -a -m "$(cat <<'EOF'
+git switch -c <branch-name>
+git add -A
+git commit -m "$(cat <<'EOF'
 Commit message here.
 
-Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+Co-Authored-By: <model name and version> <noreply@anthropic.com>
 EOF
 )"
+git push -u origin <branch-name>
+gh pr create --repo <owner>/<repo> --head <branch-name> --base <base-branch> --draft --title "<title>" --body-file <file>
 ```
-- `-a` stages all changes (tracked + untracked). Use `-u` to only stage tracked files.
-- `-m` sets the commit message. Include a `Co-Authored-By` trailer that reflects the model actually used, not the example above.
-- Without `-a` or `-u`, only pre-staged changes are committed. Without staged changes, an empty branch is created.
-- `gt submit` pushes and creates/updates PRs on GitHub.
-- `gt track --parent <branch>` fixes parent relationships if a branch ends up in the wrong stack.
+- `git add -A` stages all changes (tracked + untracked). Use `git add -u` to stage only tracked files.
+- Replace `<model name and version>` with the model that wrote the change in this session. Do not copy a model name from an earlier commit or session.
+- Open PRs as drafts. Run `gh pr ready` only when I ask.
+- For a stack, set each child PR's `--base` to its parent branch. Fix a wrong parent with `gh pr edit <n> --repo <owner>/<repo> --base <parent-branch>`.
 
 ## Tool Usage
 
